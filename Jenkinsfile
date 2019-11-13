@@ -12,6 +12,8 @@ pipeline {
           openshift.withCluster() {
             def currentProject
             openshift.withProject() {
+              echo "FOO1 is ${env.FOO1}"
+              echo "FOO2 is ${env.FOO2}"
               currentProject = openshift.project()
               def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
               echo "To allow jenkins to create projects from a pipeline, the following command must be run"
