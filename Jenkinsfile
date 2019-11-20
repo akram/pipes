@@ -10,7 +10,6 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            def currentProject
             openshift.withProject() {
               def currentProject = openshift.project()
               def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
