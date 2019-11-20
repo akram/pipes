@@ -12,38 +12,16 @@ pipeline {
           openshift.withCluster() {
             def currentProject
             openshift.withProject() {
-              currentProject = openshift.project()
+              def currentProject = openshift.project()
               def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
-              echo "openshift.raw() commands will specify $currentProject as project"
-              // but then we will forcibely specify the new-project as the project to run raw commands against
-              echo "start"
-              def result = ""
-              echo "\"adm prune deployments\", \" --keep-complete=0 --keep-failed=0 -n ${currentProject}\""
-              result = openshift.raw( "adm prune deployments", "--namespace=${currentProject} --keep-complete=0 --keep-failed=0 -n ${currentProject}")
-              echo "${result}"
-
-              echo "\"adm prune deployments\", \"-n ${currentProject}\", \" --keep-complete=0 --keep-failed=0 \""
-              result = openshift.raw( "adm prune deployments", "-n ${currentProject}", "--keep-complete=0 --keep-failed=0 -n ${currentProject}")
-              echo "${result}"
-
-              echo "\"adm prune deployments\", \" --keep-complete=0 --keep-failed=0\", \"-n ${currentProject}\""
-              result = openshift.raw( "adm prune deployments", " --keep-complete=0 --keep-failed=0", "-n ${currentProject}")
-	      echo "${result}"
-
-              echo "\"adm prune deployments  --keep-complete=0 --keep-failed=0 -n ${currentProject}\""
-              result = openshift.raw( "adm prune deployments  --keep-complete=0 --keep-failed=0 -n ${currentProject}")
-              echo "${result}"
-
-              echo "\"adm -n ${currentProject} prune deployments  --keep-complete=0 --keep-failed=0 \""
-              result = openshift.raw( "adm -n ${currentProject} prune deployments  --keep-complete=0 --keep-failed=0")
-              echo "${result}"
-
-	      echo "\"adm --namespace=${currentProject} prune deployments  --keep-complete=0 --keep-failed=0 \""
-              result = openshift.raw( "adm --namespace=${currentProject} prune deployments  --keep-complete=0 --keep-failed=0")
-              echo "${result}"
-
-              echo "end"
-            }
+              echo "To make this pipeline work it is required to create a secret named my-private-ssh-key and make it sync"
+              echo "oc create secret generic my-private-ssh-key --from-file=ssh-privatekey=$HOME/.ssh/id_rsa --from-literal=username=akram"
+              echo "oc label secret my-private-ssh-key  credential.sync.jenkins.openshift.io=true"
+              echo "This is a test $project "
+              def credentialsId = "${currentProject}-my-private-ssh-key"
+              git branch: 'master', credentialsId: credentialsId, url: 'git@github.com:akram/private-pipes.git'
+              echo "end"            
+           }
           }
         }
       }
