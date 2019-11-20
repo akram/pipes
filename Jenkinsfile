@@ -26,6 +26,13 @@ pipeline {
         }
       }
     }
+    node("maven") {
+      stage("Checkout") { }
+      stage("Build WAR") {
+        sh "mvn clean package -Popenshift"
+        stash name:"war", includes:"target/ROOT.war"
+      }
+    }
   }
 }
 
