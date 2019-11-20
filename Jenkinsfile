@@ -19,7 +19,7 @@ pipeline {
               echo "oc label secret my-private-ssh-key  credential.sync.jenkins.openshift.io=true"
               echo "This is a test $project "
               def credentialsId = "${currentProject}-my-private-ssh-key"
-              git branch: 'master', credentialsId: credentialsId, url: 'git@github.com:akram/private-pipes.git'
+              git branch: 'master', url: 'https://github.com/akram/pipes.git'
               echo "end"            
            }
           }
@@ -40,7 +40,7 @@ pipeline {
               echo "oc label secret my-private-ssh-key  credential.sync.jenkins.openshift.io=true"
               echo "This is a test $project "
               def credentialsId = "${currentProject}-my-private-ssh-key"
-              git branch: 'master', credentialsId: credentialsId, url: 'git@github.com:akram/private-pipes.git'
+              git branch: 'master', url: 'https://github.com/akram/pipes.git'
               echo "end"
            }
           }
