@@ -17,9 +17,8 @@ pipeline {
               def templateSelector = openshift.selector( "template", "nodejs-example")
               if (!templateSelector.exists() ) {
                   openshift.create("https://raw.githubusercontent.com/openshift/nodejs-ex/master/openshift/templates/nodejs.json")
-                  openshift.newApp("nodejs-example --template=${currentProject}/nodejs-example")
               } 
-              openshift.newApp("nodejs-example", "--template=${currentProject}/nodejs-example")
+              openshift.newApp("nodejs-example --template=${currentProject}/nodejs-example")
               openshift.patch("dc/nodejs-example", '\'{"spec":{"strategy":{"type":"Recreate"}}}\'')
               def mySelector = openshift.selector("bc/nodejs-example")
               mySelector.patch('\'{"spec":{"source":{"git":{"ref": "development"}}}}\'')
