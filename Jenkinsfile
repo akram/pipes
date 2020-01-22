@@ -1,32 +1,99 @@
 #!/usr/bin/env groovy
 
-import java.text.SimpleDateFormat
-
+def templatePath = 'nginx-example'
+def templateName = 'nodejs-example' 
 pipeline {
-  agent { node { label 'nodejs' } }
-  options { timeout(time: 20, unit: 'MINUTES') }
+  agent {
+    node {
+      label 'nodejs'
+    }
+  }
+  options {
+    timeout(time: 20, unit: 'MINUTES') 
+  }
   stages {
-    stage('raw') {
+    stage('preamble') {
+        steps {
+            script {
+                openshift.withCluster() {
+                    openshift.withProject() {
+                        echo "Using project: ${openshift.project()}"
+                    }
+                }
+            }
+        }
+    }
+    stage('cleanup') {
       steps {
         script {
-          openshift.withCluster() {
-            def currentProject
-            openshift.withProject() {
-              currentProject = openshift.project()
-              def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
-              echo "To make this pipeline work it is required to create a secret named my-private-ssh-key and make it sync"
-              echo "oc create secret generic my-private-ssh-key --from-file=ssh-privatekey=$HOME/.ssh/id_rsa --from-literal=username=akram"
-              echo "oc label secret my-private-ssh-key  credential.sync.jenkins.openshift.io=true"
-              echo "This is a test $project "
-              def credentialsId = "${currentProject}-my-private-ssh-key"
-              git branch: 'master', credentialsId: credentialsId, url: 'git@github.com:akram/private-pipes.git'
-              echo "end"
+            openshift.withCluster() {
+                openshift.withProject() {
+                  openshift.selector("all", [ template : templateName ]).delete() 
+                  if (openshift.selector("secrets", templateName).exists()) { 
+                    openshift.selector("secrets", templateName).delete()
+                  }
+                }
             }
-          }
+        }
+      }
+    }
+    stage('create') {
+      steps {
+        script {
+            openshift.withCluster() {
+                openshift.withProject() {
+                  openshift.newApp(templatePath) 
+                }
+            }
+        }
+      }
+    }
+    stage('build') {
+      steps {
+        script {
+            openshift.withCluster() {
+                openshift.withProject() {
+                  def builds = openshift.selector("bc", templateName).related('builds')
+                  timeout(5) { 
+                    builds.untilEach(1) {
+                      return (it.object().status.phase == "Complete")
+                    }
+                  }
+                }
+            }
+        }
+      }
+    }
+    stage('deploy') {
+      steps {
+        script {
+            openshift.withCluster() {
+                openshift.withProject() {
+                  def rm = openshift.selector("dc", templateName).rollout()
+                  timeout(5) { 
+                    openshift.selector("dc", templateName).related('pods').untilEach(1) {
+                      return (it.object().status.phase == "Running")
+                    }
+                  }
+                }
+            }
+        }
+      }
+    }
+    stage('tag') {
+      steps {
+        script {
+            openshift.withCluster() {
+                openshift.withProject() {
+                  openshift.tag("${templateName}:latest", "${templateName}-staging:latest") 
+                }
+            }
         }
       }
     }
   }
 }
+
+
 
 
