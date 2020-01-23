@@ -9,7 +9,6 @@ pipeline {
         stage('initialisation') {
             steps {
                 script {
-                    openshiftVerifyBuild buildConfig: "job-1" 
                     openshift.withCluster() {
                         openshift.withProject() {
                             echo "Using project: ${openshift.project()}"
