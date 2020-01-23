@@ -13,7 +13,8 @@ pipeline {
                         openshift.withProject() {
                             echo "Using project: ${openshift.project()}"
                             def bc = openshift.selector("bc", "job-1");
-                            echo "BC is ${bc}" 
+                            echo "BC is ${bc}"
+                            openshiftVerifyBuild buildCfg: "job-1" 
                         }
                     }
                 }
