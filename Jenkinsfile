@@ -14,7 +14,7 @@ pipeline {
                             echo "Using project: ${openshift.project()}"
                             def bc = openshift.selector("bc", "job-1");
                             echo "BC is ${bc}"
-                            openshiftVerifyBuild buildCfg: "job-1" 
+                            openshiftVerifyBuild buildConfig: "job-1" 
                         }
                     }
                 }
