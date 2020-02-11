@@ -19,7 +19,7 @@ pipeline {
                             def dc = app.object()
                             echo "new-app created a ${dc.kind} with name ${dc.metadata.name}"
                             echo "The object has labels: ${dc.metadata.labels}"
-                            openshiftVerifyBuild buildConfig: "job-1" 
+                            openshiftVerifyBuild buildConfig: "pipes" 
                         }
                     }
                 }
