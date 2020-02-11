@@ -12,7 +12,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             echo "Using project: ${openshift.project()}"
-                            def bc = openshift.selector("bc", "job-1");
+                            def bc = openshift.selector("bc", "pipes");
                             echo "BC is ${bc}"
                             def now = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
                             def app = openshift.newApp('redis-ephemeral',"-p", "DATABASE_SERVICE_NAME=redis-${now}").narrow('dc')
