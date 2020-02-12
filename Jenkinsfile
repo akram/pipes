@@ -15,7 +15,7 @@ pipeline {
                             def bc = openshift.selector("bc", "pipes");
                             echo "BC is ${bc}"
                             def now = new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
-                            def app = openshift.newApp('redis-ephemeral',"-p", "DATABASE_SERVICE_NAME=redis-${now}").narrow('dc')
+                            def app = openshift.newApp('mongodb-persistent',"-p", "DATABASE_SERVICE_NAME=mongodb-${now}").narrow('dc')
                             def dc = app.object()
                             echo "new-app created a ${dc.kind} with name ${dc.metadata.name}"
                             echo "The object has labels: ${dc.metadata.labels}"
