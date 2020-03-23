@@ -3,7 +3,7 @@
 import java.text.SimpleDateFormat
 
 pipeline {
-  agent { node { label 'ansible' } }
+  agent { node { label 'agent-ansible' } }
   options { timeout(time: 20, unit: 'MINUTES') }
   stages {
     stage('raw') {
