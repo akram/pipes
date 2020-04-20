@@ -3,13 +3,13 @@
 import java.text.SimpleDateFormat
 
 pipeline {
-  agent { node { label 'nodejs' } }
+  agent { kubernetes { cloud 'openshift' } }
   options { timeout(time: 20, unit: 'MINUTES') }
   stages {
     stage('raw') {
       steps {
         script {
-         node("maven") {
+         container("maven") {
           openshift.withCluster() {
             openshift.withProject() {
               def currentProject = openshift.project()
