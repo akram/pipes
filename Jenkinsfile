@@ -46,6 +46,7 @@ pipeline {
               echo "This is a test $project "
               def credentialsId = "${currentProject}-my-private-ssh-key"
               git branch: 'master', url: 'https://github.com/akram/pipes.git'
+              sh 'npm version'
               echo "end"
            }
           }
