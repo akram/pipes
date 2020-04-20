@@ -9,6 +9,7 @@ pipeline {
     stage('raw') {
       steps {
         script {
+         node("maven") {
          container("maven") {
           openshift.withCluster() {
             openshift.withProject() {
@@ -21,7 +22,8 @@ pipeline {
               def credentialsId = "${currentProject}-my-private-ssh-key"
               git branch: 'master', url: 'https://github.com/jitpack/maven-simple'
               sh 'mvn clean package'
-              echo "end"            
+              echo "end"
+             }           
            }
           }
          }
