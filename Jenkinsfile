@@ -10,8 +10,8 @@ pipeline {
       steps {
         script {
          node("maven") {
-         container("maven") {
-          openshift.withCluster() {
+          container("maven") {
+           openshift.withCluster() {
             openshift.withProject() {
               def currentProject = openshift.project()
               def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date()) 
@@ -20,12 +20,12 @@ pipeline {
               echo "oc label secret my-private-ssh-key  credential.sync.jenkins.openshift.io=true"
               echo "This is a test $project "
               def credentialsId = "${currentProject}-my-private-ssh-key"
-              git branch: 'master', url: 'https://github.com/jitpack/maven-simple'
+              git branch: 'master', url: 'https://github.com/gorkem/simple-quarkus-weather-app.git'
               sh 'mvn clean package'
               echo "end"
              }           
+            }
            }
-          }
          }
         }
       }
