@@ -3,7 +3,8 @@
 import java.text.SimpleDateFormat
 
 pipeline {
-  agent { kubernetes { cloud 'openshift' } }
+  // kubernetes { cloud 'openshift' }
+  agent { none } //kubernetes { cloud 'openshift' } }
   options { timeout(time: 20, unit: 'MINUTES') }
   stages {
     stage('raw') {
