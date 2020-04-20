@@ -27,11 +27,11 @@ pipeline {
               echo "end"
              }           
             }
-           }
+          }
          }
         }
-      //}
-    }
+      }
+    //}
     stage('nodejs') {
       steps {
         script {
