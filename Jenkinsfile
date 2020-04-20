@@ -30,7 +30,7 @@ pipeline {
     stage('nodejs') {
       steps {
         script {
-         node("nodejs") {
+         container("nodejs") {
           openshift.withCluster() {
             openshift.withProject() {
               def currentProject = openshift.project()
