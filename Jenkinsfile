@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat
 
 pipeline {
   // kubernetes { cloud 'openshift' }
-  agent { none } //kubernetes { cloud 'openshift' } }
+  //agent { kubernetes { cloud 'openshift' } }
+  agent none 
   options { timeout(time: 20, unit: 'MINUTES') }
   stages {
     stage('raw') {
