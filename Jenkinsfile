@@ -12,7 +12,7 @@ pipeline {
       steps {
         script {
          node("maven") {
-          //container("maven") {
+          container("maven") {
            openshift.withCluster() {
             openshift.withProject() {
               def currentProject = openshift.project()
@@ -31,7 +31,7 @@ pipeline {
          }
         }
       }
-    //}
+    }
     stage('nodejs') {
       steps {
         script {
