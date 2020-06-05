@@ -10,15 +10,13 @@ pipeline {
       steps {
         script {
           node('maven') {
-            dir ('/tmp') {
-              git url: 'https://github.com/akram/pipes.git'
-              sh '''
-                 cd pipes
-                 mvn clean package -X
-                 '''
+            git url: 'https://github.com/akram/pipes.git'
+            sh '''
+               cd pipes
+               mvn clean package -X
+               '''
             }
           }
-        }
         script {
           node('nodejs') {
             openshift.withCluster() {
