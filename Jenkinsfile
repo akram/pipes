@@ -9,7 +9,7 @@ pipeline {
     stage('raw') {
       steps {
         script {
-          node('maven') {
+          node('maven2') {
             git url: 'https://github.com/akram/pipes.git'
             sh '''
                git clone https://github.com/akram/pipes.git
