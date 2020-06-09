@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: puma-build
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      volumes:
+      - name: workspace
+        emptyDir: {}
+      initContainers:
+      - name: git-clone
+        image: alpine/git
+        command:
+        - 'sh'
+        - '-c' 
+        - 'cd /workspace ; git clone https://github.com/akram/pipes;  cd pipes ; git checkout jenkinsfile-runner; mv pipeline/* /workspace/'
+        # command: ['sh', '-c', "git clone https://github.com/akram/pipes ; cd pipes ; git checkout jenkins-filerunner; cp -fr pipeline/* /workspace"]
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+      containers:
+      - image: docker-registry.default.svc:5000/jenkinsfile-runner-akram/jenkinsfile-runner
+        name: puma-build
+        volumeMounts:
+        - name: workspace
+          mountPath: /workspace
+      restartPolicy: Never
+status: {}
