@@ -3,7 +3,6 @@
 import java.text.SimpleDateFormat
 
 pipeline {
-  agent { node { label 'nodejs' } }
   options { timeout(time: 20, unit: 'MINUTES') }
   stages {
     stage('raw') {
