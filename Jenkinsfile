@@ -9,12 +9,12 @@ pipeline {
     stage('raw') {
       steps {
         script {
-          node('maven2') {
+          node('maven') {
             git url: 'https://github.com/akram/pipes.git'
             sh '''
                git clone https://github.com/akram/pipes.git
                cd pipes
-               mvn clean package -X
+               mvn clean package
                '''
             }
           }
