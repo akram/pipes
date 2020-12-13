@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 import java.text.SimpleDateFormat
 pipeline {
-  steps {
+  stages {
     stage('Get a simple nodejs-ex project') {
       node('nodejs') {
         stage('Build a simple nodejs app') {
