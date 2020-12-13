@@ -7,14 +7,14 @@ pipeline {
       steps {
         stage('Get a simple nodejs-ex project') {
           node('nodejs') {
-            stage('Build a simple nodejs app') {
+            script('Build a simple nodejs app') {
               sh """
                 git clone https://github.com/akram/simple-nodejs-ex.git
                 cd simple-nodejs-ex
                 npm install
                 """
             }
-            stage('Build nodejs s2i image') {
+            script('Build nodejs s2i image') {
               openshift.withCluster() {
                 try {
                   def created = openshift.newApp( 'nodejs~https://github.com/akram/simple-nodejs-ex.git' )
@@ -46,7 +46,7 @@ pipeline {
         }
 
 
-        stage('Build, Install, deploy Maven project') {
+        script('Build, Install, deploy Maven project') {
           node('maven') {
             //git url: 'https://github.com/akram/simple-java-ex.git'
             stage('Test Maven project') {
@@ -56,7 +56,7 @@ pipeline {
                 mvn -B test
                 """
             }
-            stage('Build JBoss EAP s2i image') {
+            script('Build JBoss EAP s2i image') {
               openshift.withCluster() {
                 try {
                   openshift.raw( "new-app --build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git " );
@@ -69,7 +69,7 @@ pipeline {
                 //openshift.raw( "new-app --build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git " )
               }
             }
-            stage('Build OpenShift Image') {
+            script('Build OpenShift Image') {
               echo "Building OpenShift container image example"
                 script {
                   openshift.withCluster() {
