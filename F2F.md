@@ -11,7 +11,7 @@ oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:$(
 oc adm policy add-role-to-user admin  system:serviceaccount:$(oc project -q):default -n $(oc project -q)
 
 # Create a new (Jenkins) pipeline build
-oc new-build  --strategy=pipeline https://github.com/akram/jenkinsfile-runner-openshift.git#f2f
+oc new-build  --strategy=pipeline https://github.com/akram/pipes#f2f
 
 
 # Start the build
