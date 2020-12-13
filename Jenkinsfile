@@ -5,30 +5,25 @@ pipeline {
   stages {
     stage('raw') {
       steps {
-        stage('Get a simple nodejs-ex project') {
-          node('nodejs') {
-            script('Build a simple nodejs app') {
-              sh """
-                git clone https://github.com/akram/simple-nodejs-ex.git
-                cd simple-nodejs-ex
-                npm install
-                """
-            }
-            script('Build nodejs s2i image') {
-              openshift.withCluster() {
-                try {
-                  def created = openshift.newApp( 'nodejs~https://github.com/akram/simple-nodejs-ex.git' )
-                    echo "new-app created ${created.count()} objects named: ${created.names()}"
-                } catch ( e ) {
-                  "Error encountered: ${e}"
-                }
-                //openshift.raw( "new-app nodejs~https://github.com/akram/simple-nodejs-ex.git " )
-                def bc = openshift.selector( "bc", "simple-nodejs-ex");
-                def buildSelector = bc.startBuild("--wait");
-              }
-            }
-
+        node('nodejs') {
+          script('Build a simple nodejs app') {
+            sh """
+              git clone https://github.com/akram/simple-nodejs-ex.git
+              cd simple-nodejs-ex
+              npm install
+              """
+          }
+          script('Build nodejs s2i image') {
             openshift.withCluster() {
+              try {
+                def created = openshift.newApp( 'nodejs~https://github.com/akram/simple-nodejs-ex.git' )
+                  echo "new-app created ${created.count()} objects named: ${created.names()}"
+              } catch ( e ) {
+                "Error encountered: ${e}"
+              }
+              //openshift.raw( "new-app nodejs~https://github.com/akram/simple-nodejs-ex.git " )
+              def bc = openshift.selector( "bc", "simple-nodejs-ex");
+              def buildSelector = bc.startBuild("--wait");
               openshift.withProject() {
                 currentProject = openshift.project();
                 def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
@@ -45,30 +40,27 @@ pipeline {
           }
         }
 
-
         script('Build, Install, deploy Maven project') {
           node('maven') {
             //git url: 'https://github.com/akram/simple-java-ex.git'
-            stage('Test Maven project') {
-              sh """
-                git clone https://github.com/akram/simple-java-ex.git
-                cd simple-java-ex
-                mvn -B test
-                """
-            }
-            script('Build JBoss EAP s2i image') {
-              openshift.withCluster() {
-                try {
-                  openshift.raw( "new-app --build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git " );
-                  def created = openshift.newApp( '--build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git' );
-                  echo "new-app created ${created.count()} objects named: ${created.names()}";
-                } catch ( e ) {
-                  echo "Error encountered: ${e}";
+            sh """
+              git clone https://github.com/akram/simple-java-ex.git
+              cd simple-java-ex
+              mvn -B test
+              """
+              script('Build JBoss EAP s2i image') {
+                openshift.withCluster() {
+                  try {
+                    openshift.raw( "new-app --build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git " );
+                    def created = openshift.newApp( '--build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git' );
+                    echo "new-app created ${created.count()} objects named: ${created.names()}";
+                  } catch ( e ) {
+                    echo "Error encountered: ${e}";
+                  }
+                  //openshift.raw( "new-app nodejs~https://github.com/akram/simple-nodejs-ex.git " )
+                  //openshift.raw( "new-app --build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git " )
                 }
-                //openshift.raw( "new-app nodejs~https://github.com/akram/simple-nodejs-ex.git " )
-                //openshift.raw( "new-app --build-env=MAVEN_ARGS_APPEND=-Dcom.redhat.xpaas.repo.jbossorg jboss-eap73-openshift:7.3~https://github.com/akram/simple-java-ex.git " )
               }
-            }
             script('Build OpenShift Image') {
               echo "Building OpenShift container image example"
                 script {
