@@ -12,7 +12,7 @@ pipeline {
             containerTemplate(name: 'maven', image: 'registry.redhat.io/openshift4/ose-jenkins-agent-maven', ttyEnabled: true, command: 'cat', workingDir: '/tmp'),
             containerTemplate(name: 'nodejs', image: 'registry.redhat.io/openshift4/jenkins-agent-nodejs-10-rhel7', ttyEnabled: true, command: 'cat', workingDir: '/tmp')
             ]) {
-          node('openshift-agents') { container('nodejs') { 
+          node('nodejs') {
             script('Build a simple nodejs app') {
               sh """
                 git clone https://github.com/akram/simple-nodejs-ex.git
@@ -48,7 +48,7 @@ pipeline {
           }
 
           script('Build, Install, deploy Maven project') {
-            container('maven') {
+            node('maven') {
               //git url: 'https://github.com/akram/simple-java-ex.git'
               sh """
                 git clone https://github.com/akram/simple-java-ex.git
@@ -79,7 +79,6 @@ pipeline {
                   }
               }
             }
-          }
           }
         }
       }
