@@ -6,7 +6,7 @@ def cloud = podTemplate( name: 'openshift', cloud: 'openshift', label: 'openshif
     containers: [
     containerTemplate(name: 'maven', image: 'registry.redhat.io/openshift4/ose-jenkins-agent-maven', ttyEnabled: true, command: 'cat', workingDir: '/tmp'),
     containerTemplate(name: 'nodejs', image: 'registry.redhat.io/openshift4/jenkins-agent-nodejs-10-rhel7', ttyEnabled: true, command: 'cat', workingDir: '/tmp')
-    ]);
+    ]){};
 
 pipeline { 
   agent none; 
