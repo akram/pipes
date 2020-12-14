@@ -1,9 +1,9 @@
 #!/usr/bin/env groovy
 import java.text.SimpleDateFormat
-def cloud = podTemplate( name: 'openshift', cloud: 'openshift', label: 'openshift-agents', showRawYaml: false, envVars: [
+def cloud = podTemplate( name: 'openshift', cloud: 'openshift', label: 'openshift-agents', showRawYaml: false, activeDeadlineSeconds: 60, envVars: [ 
     envVar(key: 'PATH', value: '/opt/rh/rh-nodejs10/root/usr/bin:/opt/rh/rh-maven35/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'),
     envVar(key: 'MAVEN_ARGS_APPENDX', value: '-Dcom.redhat.xpaas.repo.jbossorg')],
-    containers: [
+    containers: [ 
     containerTemplate(name: 'maven', image: 'registry.redhat.io/openshift4/ose-jenkins-agent-maven', ttyEnabled: true, command: 'cat', workingDir: '/tmp'),
     containerTemplate(name: 'nodejs', image: 'registry.redhat.io/openshift4/jenkins-agent-nodejs-10-rhel7', ttyEnabled: true, command: 'cat', workingDir: '/tmp')
     ]){};
