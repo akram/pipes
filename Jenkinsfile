@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 pipeline { 
   agent none; 
   stages {
-    stage('raw') {
+    stage('Compile nodeJS app') {
       steps { 
         node('nodejs') {
           sh """
@@ -14,7 +14,7 @@ pipeline {
         }
       }
     }
-    stage('raw2') {
+    stage('Build NodeJS app') {
       steps { 
         node('nodejs') {
           script {
@@ -42,7 +42,7 @@ pipeline {
       }
     }
 
-    stage('raw3') {
+    stage('Compile maven app') {
       steps { 
         node('maven') {
           //git url: 'https://github.com/akram/simple-java-ex.git'
@@ -54,7 +54,7 @@ pipeline {
         }
       }
     }       
-    stage('raw4') {
+    stage('Create maven app ') {
       steps { 
         node('maven') {
           script {
@@ -73,7 +73,7 @@ pipeline {
         }
       }
     }
-    stage('last') { 
+    stage('Build maven image') { 
       steps {
         script { 
           echo "Building OpenShift container image example;";
