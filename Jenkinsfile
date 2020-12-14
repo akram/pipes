@@ -74,9 +74,9 @@ pipeline {
       }
     }
     stage('last') { 
-      echo "Building OpenShift container image example;";
       steps {
         script { 
+          echo "Building OpenShift container image example;";
           openshift.withCluster() {
             openshift.withProject() {
               openshift.selector("bc", "simple-java-ex").startBuild("--follow=true");
