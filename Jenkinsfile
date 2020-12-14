@@ -36,10 +36,6 @@ pipeline {
                   def project = "test-" + new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
                   echo "To allow jenkins to create projects from a pipeline, the following command must be run";
                   echo "oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:$currentProject:jenkins";
-                  openshift.raw( "new-project $project" );
-                  // echo "Context project is $openshift.project()"
-                  // Project context has been set to the pipeline project
-                  currentProject = project;
                   echo "openshift.raw() commands will specify $currentProject as project";
                   echo "end";
                 }
