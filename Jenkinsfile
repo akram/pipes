@@ -4,8 +4,8 @@ pipeline {
   agent none; 
   stages {
     stage('raw') {
-      node('nodejs') {
-        steps { 
+      steps { 
+        node('nodejs') {
           sh """
             git clone https://github.com/akram/simple-nodejs-ex.git
             cd simple-nodejs-ex
@@ -15,8 +15,8 @@ pipeline {
       }
     }
     stage('raw2') {
-      node('nodejs') {
-        steps { 
+      steps { 
+        node('nodejs') {
           openshift.withCluster() {
             try {
               def created = openshift.newApp( 'nodejs~https://github.com/akram/simple-nodejs-ex.git' )
