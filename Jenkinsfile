@@ -40,7 +40,7 @@ pipeline {
       }
     }
 
-    stage('raw4') {
+    stage('raw3') {
       steps { 
         node('maven') {
           //git url: 'https://github.com/akram/simple-java-ex.git'
