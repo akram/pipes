@@ -11,7 +11,7 @@ pipeline {
     stage('raw') {
       steps {
         script {
-         node("java-builder") {
+         node("java-builder-template") {
           container("java") {
            openshift.withCluster() {
             openshift.withProject() {
@@ -35,7 +35,7 @@ pipeline {
     stage('nodejs') {
       steps {
         script {
-         node("nodejs-builder") {
+         node("nodejs-builder-template") {
            container("nodejs") {
             openshift.withCluster() {
               openshift.withProject() {
